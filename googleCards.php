@@ -29,7 +29,7 @@ License: GPL3
 */
 
 define( 'GOOGLECARD_PLUGIN_NAME', 'googleCards');
-define( 'GOOGLECARD_PLUGIN_DIRECTORY', 'googleCards');
+define( 'GOOGLECARD_PLUGIN_DIRECTORY', 'googlecards');
 define( 'GOOGLECARD_CURRENT_VERSION', '0.1' );
 define( 'GOOGLECARD_CURRENT_BUILD', '3' );
 define( 'GOOGLECARD_DEBUG', false);
@@ -158,9 +158,9 @@ function googleCards_init()
 {
 	register_sidebar_widget(__('googleCards'), 'widget_googleCards');
 	register_widget_control('googleCards', 'googleCards_control', '', '' );
-	$css = '/wp-content/plugins/googleCards/css/googleCards.css';
+	$css = '/wp-content/plugins/googlecards/css/googleCards.css';
 	wp_enqueue_style('googleCards', $css);
-	$js = '/wp-content/plugins/googleCards/js/googleCards.min.js';
+	$js = '/wp-content/plugins/googlecards/js/googleCards.min.js';
 	wp_enqueue_script('googleCards', $js);
 }
 
