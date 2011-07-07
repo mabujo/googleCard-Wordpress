@@ -32,6 +32,8 @@ If the plugin cannot cache it will still work, but I advise you to make sure cac
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.3 =
+* Fix for lowercase names in wordpress plugin directory
 
 = 0.2 =
 * Fixed some caching and css problems
