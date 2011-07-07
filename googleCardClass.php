@@ -47,6 +47,7 @@ class googleCard
 		{
 			// build our google+ url
 			$this->url = $this->gplus_url . $id;
+			$this->user_id = $id;
 		}
 	}
 
@@ -95,7 +96,7 @@ class googleCard
 		$img = 'http:' . $matches[1];
 
 		// put the data in an array
-		$return = array('count' => $circles, 'name' => $name, 'img' => $img, 'url' => $this->url);
+		$return = array('id' => $this->user_id, 'count' => $circles, 'name' => $name, 'img' => $img, 'url' => $this->url);
 
 		return $return;
 	}
@@ -118,7 +119,7 @@ class googleCard
 		curl_close($this->curl);
 	}
 
-	// caching
+	// cache handling
 	protected function ghettoCache()
 	{
 		// our cache file
@@ -137,31 +138,48 @@ class googleCard
 			//close it
 			fclose($handle);
 
-			// json decode, put into array and return
-			return get_object_vars(json_decode($data));
+			$cached = get_object_vars(json_decode($data));
+
+			if (is_null($cached['name']) || is_null($cached['url']) || $this->user_id != $cached['id']) 
+			{
+				$html = $this->doCache($file);
+				return $html;
+			}
+			else
+			{
+				// json decode, put into array and return
+				return get_object_vars(json_decode($data));
+			}
 		}
 		// we don't have a cache file
 		// call google+ and cache
 		else
 		{
-			// get and parse the data
-			$html = $this->parseHtml();
-
-			// json encode the data
-			$json = json_encode($html);
-
-			// open the file
-			$handle = fopen($file, 'w');
-
-			// write data to file
-			fwrite($handle, $json);
-
-			// close file
-			fclose($handle);
-
-			// return data
+			$html = $this->doCache($file);
 			return $html;
 		}
+	}
+
+	// the caching function
+	protected function doCache($file)
+	{
+		// get and parse the data
+		$html = $this->parseHtml();
+
+		// json encode the data
+		$json = json_encode($html);
+
+		// open the file
+		$handle = fopen($file, 'w');
+
+		// write data to file
+		fwrite($handle, $json);
+
+		// close file
+		fclose($handle);
+
+		// return data
+		return $html;
 	}
 }
 ?>

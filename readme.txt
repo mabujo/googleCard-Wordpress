@@ -33,6 +33,9 @@ If the plugin cannot cache it will still work, but I advise you to make sure cac
 
 == Changelog ==
 
+= 0.2 =
+* Fixed some caching and css problems
+
 = 0.1 =
 * Initial release
 

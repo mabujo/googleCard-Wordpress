@@ -23,9 +23,8 @@
 	font-weight: bold;
 }
 #plus_card {
-	width: 200px;
+	max-width: 270px;
 	min-width: 200px;
-	max-width: 290px;
 	height: 116px;
 	position: relative;
 	background: #fff;
@@ -47,6 +46,7 @@
 	font-size: 15px;
 	color: #3366CC;
 	padding: 8px 8px 8px 0;
+	word-wrap: break-word;
 }
 #plus_card_add {
 	background: #eee;
@@ -64,6 +64,7 @@
 #plus_card_add a {
 	color: #666;
 	font-size: 12px;
+	word-wrap: break-word;
 }
 #plusCardCount, #plusCardCredit {
 	width: 100%;

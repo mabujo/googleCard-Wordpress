@@ -3,7 +3,7 @@
 Plugin Name: googleCards
 Plugin URI: http://plusdevs.com/google-wordpress-plugin/
 Description: Adds google+ contact card widget to your blog
-Version: 0.1
+Version: 0.2
 Author: Mabujo, john@mabujo.com
 Author URI: http://plusdevs.com
 License: GPL3
@@ -158,7 +158,7 @@ function googleCards_init()
 {
 	register_sidebar_widget(__('googleCards'), 'widget_googleCards');
 	register_widget_control('googleCards', 'googleCards_control', '', '' );
-	$css = '/wp-content/plugins/googleCards/css/googleCards.min.css';
+	$css = '/wp-content/plugins/googleCards/css/googleCards.css';
 	wp_enqueue_style('googleCards', $css);
 	$js = '/wp-content/plugins/googleCards/js/googleCards.min.js';
 	wp_enqueue_script('googleCards', $js);
