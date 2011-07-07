@@ -118,7 +118,7 @@ function googleCards_control()
 	if ($_POST['googleCards-Submit'])
 	{
 		$options['title'] = htmlspecialchars($_POST['googleCards-WidgetTitle']);
-		$options['plus_id'] = htmlspecialchars($_POST['googleCards-WidgetTitle']);
+		$options['plus_id'] = htmlspecialchars($_POST['googleCards-plusId']);
 		update_option("widget_googleCards", $options);
 	}
 
