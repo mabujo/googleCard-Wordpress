@@ -23,8 +23,7 @@
 	font-weight: bold;
 }
 #plus_card {
-	max-width: 270px;
-	min-width: 200px;
+	width: 99%;
 	height: 116px;
 	position: relative;
 	background: #fff;
@@ -34,19 +33,25 @@
 	-khtml-border-radius: 2px;
 	border-radius: 2px;
 	border: 1px solid #888;
-	margin-top: 10px;
+	margin: 10px auto 0;
 }
-#plus_card_image, #plus_card_name, #plus_card_add { float: left;}
 #plus_card_image {
 	width: 80px;
 	height: 80px;
 	padding: 8px;
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 #plus_card_name {
 	font-size: 15px;
 	color: #3366CC;
-	padding: 8px 8px 8px 0;
+	padding: 0 8px 8px 0;
 	word-wrap: break-word;
+	float: left;
+	margin-left: 95px;
+	margin-top: 7px;
+	line-height: 1.3em;
 }
 #plus_card_add {
 	background: #eee;
@@ -60,6 +65,8 @@
 	-o-border-radius: 3px;
 	-khtml-border-radius: 3px;
 	border-radius: 3px;
+	float: left;
+	margin-left: 95px;
 }
 #plus_card_add a {
 	color: #666;
@@ -73,19 +80,23 @@
     height: 20px;
     background: #eee;
     display: block;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 #plusCardCount p {
-	padding-left: 8px;
-	margin: 1px 0 0;
+	padding: 0 0 0 8px !important;
+	margin: 1px 0 0 !important;
 	font-size: 12px;
 	color: #444;
 }
 #plusCardCredit p {
-	padding-left: 8px;
+	padding: 0 0 0 8px !important;
 	font-size: 12px;
 }
 #plusCardCredit a {
 	font-size: 12px;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 #plusCardShowHide {
 	width: 5px;
@@ -93,4 +104,6 @@
 	right: 10px;
 	bottom: 0;
 	cursor: pointer;
+	padding: 0 !important;
+	margin: 0 !important;
 }
