@@ -60,20 +60,54 @@ class googleCard
 			$html = $this->ghettoCache();
 			return $html;
 		}
-		// don't cache
+		// don't cache, use a transient instead
 		else
 		{
-			$html = $this->parseHtml();
-			return $html;
+			// see if our data is in the db
+			if (false === ($data = get_transient('googlecards')))
+			{
+				// if data is not in the db, fetch the data and store
+				$data = $this->handleLoad();
+				set_transient('googlecards', $data, 60*60*$this->cache_hours);
+			}
+
+			// return the data for both cases
+			return $data;
 		}
+	}
+
+	// handles loading the page via curl or get_file_contents
+	protected function handleLoad()
+	{
+		// load the page
+		$this->getPageCurl();
+
+		// parse the returned html for the data we want
+		$curlHtml = $this->parseHtml();
+
+		// see if curl managed to get data
+		// if not, try with get_file_contents
+		if (isset($curlHtml) && !empty($curlHtml['name']) && !empty($curlHtml['count']) && !empty($curlHtml['img']))
+		{
+			return $curlHtml;
+		}
+		else
+		{
+			// try loading with file_get_contents instead
+			$this->getPageFile();
+
+			// parse
+			$data = $this->parseHtml();
+
+			// return
+			return $data;
+		}
+		
 	}
 
 	// parses through the returned html
 	protected function parseHtml()
 	{
-		// load the page
-		$this->getPage();
-
 		// parse the html to look for the h4 'have X in circles' element
 		preg_match('/<h4 class="a-c-ka-Sf">(.*?)<\/h4>/s', $this->html, $matches);
 		$count = $matches[1];
@@ -102,7 +136,7 @@ class googleCard
 	}
 
 	// use curl to load the page
-	protected function getPage()
+	protected function getPageCurl()
 	{
 		// initiate curl with our url
 		$this->curl = curl_init($this->url);
@@ -112,11 +146,23 @@ class googleCard
 		curl_setopt($this->curl, CURLOPT_USERAGENT, $this->user_agent);
 		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
 
 		// execute the call to google+
 		$this->html = curl_exec($this->curl);
 
 		curl_close($this->curl);
+	}
+
+	// use file_get_contents to load the page
+	protected function getPageFile()
+	{
+		// empty the html property (although it's probably empty anyway if we're here)
+		$this->html = '';
+
+		// get the data
+		$this->html = file_get_contents($this->url);
 	}
 
 	// cache handling
@@ -164,7 +210,7 @@ class googleCard
 	protected function doCache($file)
 	{
 		// get and parse the data
-		$html = $this->parseHtml();
+		$html = $this->handleLoad();
 
 		// json encode the data
 		$json = json_encode($html);

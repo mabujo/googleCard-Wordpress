@@ -91,6 +91,7 @@
 }
 #plusCardCredit p {
 	padding: 0 0 0 8px !important;
+	margin: 0 !important;
 	font-size: 12px;
 }
 #plusCardCredit a {

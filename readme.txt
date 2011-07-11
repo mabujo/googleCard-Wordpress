@@ -15,7 +15,7 @@ Adds a widget to your blog that will display a link to your google+ profile so p
 
 The plugin uses caching to store your google+ profile data to eliminate checking google+ on every page load.
 For the caching to work, your web-server needs to be able to write to wp-content. (a lot of plugins require this so it should be fine).
-If the plugin cannot cache it will still work, but I advise you to make sure caching is working. If caching is working you should see a file called plus_card.txt in /wp-content/cache/.
+If the plugin cannot cache it will still work, but will store the data in the database instead. If caching is working you should see a file called plus_card.txt in /wp-content/cache/.
 
 
 == Installation ==
@@ -32,6 +32,9 @@ If the plugin cannot cache it will still work, but I advise you to make sure cac
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4 =
+* Added file_get_contents as a backup for curl and use the transients API if we cant use a cache file. Tell curl not to verify https. Some minor css stuff.
+
 = 0.3.1 =
 * Some css fixes for people with big names and small sidebars.
 
@@ -44,3 +47,7 @@ If the plugin cannot cache it will still work, but I advise you to make sure cac
 = 0.1 =
 * Initial release
 
+== Upgrade Notice ==
+
+= 0.4 =
+googleCards no longer requires a cache file to work and should be much more reliable in fetching your data from google+. If you were having problems before please upgrade and try this new version.

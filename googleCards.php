@@ -3,7 +3,7 @@
 Plugin Name: googleCards
 Plugin URI: http://plusdevs.com/google-wordpress-plugin/
 Description: Adds google+ contact card widget to your blog
-Version: 0.3.1
+Version: 0.4
 Author: Mabujo, john@mabujo.com
 Author URI: http://plusdevs.com
 License: GPL3
@@ -30,7 +30,7 @@ License: GPL3
 
 define( 'GOOGLECARD_PLUGIN_NAME', 'googleCards');
 define( 'GOOGLECARD_PLUGIN_DIRECTORY', 'googlecards');
-define( 'GOOGLECARD_CURRENT_VERSION', '0.3.1' );
+define( 'GOOGLECARD_CURRENT_VERSION', '0.4' );
 define( 'GOOGLECARD_DEBUG', false);
 
 function googleCards($plus_id)
@@ -41,6 +41,7 @@ function googleCards($plus_id)
 	// initiate an instance of our scraper class
 	$plus = new googleCard($plus_id);
 
+	// if we can use file caching
 	if (gc_caching())
 	{
 		$plus->cache_data = 1;
@@ -80,9 +81,11 @@ function googleCards($plus_id)
 	else
 	{
 		echo 'Couldn\'t get data from google+';
+		echo '<!--gcVersion = ' . GOOGLECARD_CURRENT_VERSION . ' -->';
 	}
 }
 
+// display the widget
 function widget_googleCards($args) 
 {
 	extract($args);
@@ -104,6 +107,7 @@ function widget_googleCards($args)
 	echo $after_widget;
 }
 
+// for widget options
 function googleCards_control()
 {
 	$options = get_option("widget_googleCards");
@@ -137,13 +141,14 @@ function googleCards_control()
 	<?php
 }
 
+// test whether we can write to the cache directory or not
 function gc_caching()
 {
-	if (!is_dir (WP_CONTENT_DIR . "/cache"))
+	if (!is_dir(WP_CONTENT_DIR . "/cache"))
 	{
 		mkdir (WP_CONTENT_DIR . "/cache", 0777, true);
 	}
-	if (is_dir (WP_CONTENT_DIR . "/cache") && is_writable (WP_CONTENT_DIR . "/cache"))
+	if (is_dir(WP_CONTENT_DIR . "/cache") && is_writable(WP_CONTENT_DIR . "/cache"))
 	{
 		$cache = WP_CONTENT_DIR . "/cache/plus_cards.txt";
 		return true;
