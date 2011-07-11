@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: mabujo
 Donate link: http://plusdevs.com/donate
-Tags: google+, widget, sidebar, google, social
+Tags: google+, widget, sidebar, google, social, google plus, +1, google +, google +1, stats
 Requires at least: 3
 Tested up to: 3.2
 Stable tag: trunk,
@@ -10,12 +10,13 @@ A simple plugin that adds a google+ widget for linking to your google+ profile a
 
 == Description ==
 
-Adds a widget to your blog that will display a link to your google+ profile so people can add you to a circle (follow you). It also displays your name, profile picture and the number of people who have you in circles.
+googleCards is a google+ wordpress plugin.
+It adds a widget to your blog that will display a link to your google+ profile so people can add you to a circle (follow you). It also displays your name, profile picture and the number of people who have you in circles.
 
-
-The plugin uses caching to store your google+ profile data to eliminate checking google+ on every page load.
+The plugin uses caching to store your google plus profile data to eliminate checking google+ on every page load.
 For the caching to work, your web-server needs to be able to write to wp-content. (a lot of plugins require this so it should be fine).
 If the plugin cannot cache it will still work, but will store the data in the database instead. If caching is working you should see a file called plus_card.txt in /wp-content/cache/.
+As of version 0.4, caching will also failback to using transients to store your scraped google plus data.
 
 
 == Installation ==
@@ -32,6 +33,9 @@ If the plugin cannot cache it will still work, but will store the data in the da
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4.2 =
+* Forever alone - fix for bug when no one has the google+ account in a circle. 
+
 = 0.4.1 =
 * Test for safe_mode and open_basedir. Fixes curl_setopt() bug.
 

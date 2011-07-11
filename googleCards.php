@@ -3,8 +3,8 @@
 Plugin Name: googleCards
 Plugin URI: http://plusdevs.com/google-wordpress-plugin/
 Description: Adds google+ contact card widget to your blog
-Version: 0.4.1
-Author: Mabujo, john@mabujo.com
+Version: 0.4.2
+Author: Mabujo
 Author URI: http://plusdevs.com
 License: GPL3
 */
@@ -30,7 +30,7 @@ License: GPL3
 
 define( 'GOOGLECARD_PLUGIN_NAME', 'googleCards');
 define( 'GOOGLECARD_PLUGIN_DIRECTORY', 'googlecards');
-define( 'GOOGLECARD_CURRENT_VERSION', '0.4.1' );
+define( 'GOOGLECARD_CURRENT_VERSION', '0.4.2' );
 define( 'GOOGLECARD_DEBUG', false);
 
 function googleCards($plus_id)
@@ -51,7 +51,7 @@ function googleCards($plus_id)
 	// do the scrape
 	$data = $plus->googleCard();
 
-	if (isset($data) && !empty($data['name']) && !empty($data['count']) && !empty($data['img']))
+	if (isset($data) && !empty($data['name']) && !empty($data['img']))
 	{
 		?>
 		<div id="plus_card">
@@ -67,7 +67,7 @@ function googleCards($plus_id)
 				<a href="<?php echo $data['url']; ?>">Add to circles</a>
 			</span>
 			<div id="plusCardCount">
-				<p>In <?php echo $data['count']; ?> people's circles</p>
+				<p>In <?php if (isset($data['count'])) { echo $data['count']; } else { echo 0; } ?> people's circles</p>
 			</div>
 			<div id="plusCardCredit">
 				<p>Google+ card by <a href="http://plusdevs.com">plusdevs</a></p>

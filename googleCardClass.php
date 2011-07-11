@@ -122,12 +122,16 @@ class googleCard
 	{
 		// parse the html to look for the h4 'have X in circles' element
 		preg_match('/<h4 class="a-c-ka-Sf">(.*?)<\/h4>/s', $this->html, $matches);
-		$count = $matches[1];
-		$circles = preg_replace('/[^0-9_]/', '', $count);
+
+		if (isset($matches) && !empty($matches)) 
+		{
+			$count = $matches[1];
+			$circles = preg_replace('/[^0-9_]/', '', $count);
+		}
 		if (empty($circles))
 		{
 			$circles = 0;
-		}
+		}		
 
 		// parse the html for the user's name
 		preg_match('/<span class="fn">(.*?)<\/span>/s', $this->html, $matches);
