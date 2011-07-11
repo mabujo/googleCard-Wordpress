@@ -32,6 +32,9 @@ If the plugin cannot cache it will still work, but will store the data in the da
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4.1 =
+* Test for safe_mode and open_basedir. Fixes curl_setopt() bug.
+
 = 0.4 =
 * Added file_get_contents as a backup for curl and use the transients API if we cant use a cache file. Tell curl not to verify https. Some minor css stuff.
 

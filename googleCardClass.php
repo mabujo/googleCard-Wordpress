@@ -79,11 +79,23 @@ class googleCard
 	// handles loading the page via curl or get_file_contents
 	protected function handleLoad()
 	{
-		// load the page
-		$this->getPageCurl();
 
-		// parse the returned html for the data we want
-		$curlHtml = $this->parseHtml();
+		/*
+		*	if safe mode or open_basedir is set, skip to using file_get_contents
+		*	(fixes "CURLOPT_FOLLOWLOCATION cannot be activated" curl_setopt error)
+		*/
+		if(ini_get('safe_mode') || ini_get('open_basedir'))
+		{
+			// do nothing (will pass on to getPafeFile/get_file_contents as isset($curlHtml) will fail)
+		}
+		else
+		{
+			// load the page
+			$this->getPageCurl();
+
+			// parse the returned html for the data we want
+			$curlHtml = $this->parseHtml();
+		}	
 
 		// see if curl managed to get data
 		// if not, try with get_file_contents
