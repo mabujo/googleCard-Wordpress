@@ -33,6 +33,9 @@ As of version 0.4, caching will also failback to using transients to store your 
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4.3 =
+* Added contribution from Joe Vaughan for using the Wordpress 3.0 widget API so widget can be used in multiple sidebars. Thanks Joe, chapeau. Also added the option to disable the developer credit if you're a really mean sort of person and removed the example Google+ ID.
+
 = 0.4.2 =
 * Forever alone - fix for bug when no one has the google+ account in a circle. 
 
