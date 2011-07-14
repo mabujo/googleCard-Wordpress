@@ -3,7 +3,7 @@
 Plugin Name: googleCards
 Plugin URI: http://plusdevs.com/google-wordpress-plugin/
 Description: Adds google+ contact card widget to your blog
-Version: 0.4.2
+Version: 0.4.3
 Author: Mabujo
 Author URI: http://plusdevs.com
 License: GPL3
@@ -30,8 +30,27 @@ License: GPL3
 
 define( 'GOOGLECARD_PLUGIN_NAME', 'googleCards');
 define( 'GOOGLECARD_PLUGIN_DIRECTORY', 'googlecards');
-define( 'GOOGLECARD_CURRENT_VERSION', '0.4.2' );
+define( 'GOOGLECARD_CURRENT_VERSION', '0.4.3' );
 define( 'GOOGLECARD_DEBUG', false);
+
+
+// test whether we can write to the cache directory or not
+function gc_caching()
+{
+	if (!is_dir(WP_CONTENT_DIR . "/cache"))
+	{
+		mkdir (WP_CONTENT_DIR . "/cache", 0777, true);
+	}
+	if (is_dir(WP_CONTENT_DIR . "/cache") && is_writable(WP_CONTENT_DIR . "/cache"))
+	{
+		$cache = WP_CONTENT_DIR . "/cache/plus_cards.txt";
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 function googleCards($plus_id)
 {
@@ -85,89 +104,62 @@ function googleCards($plus_id)
 	}
 }
 
-// display the widget
-function widget_googleCards($args) 
-{
-	extract($args);
-	
-	$options = get_option("widget_googleCards");
-	if (!is_array( $options ))
-	{
-		$options = array(
-			'title' => 'Follow me on Google+',
-			'plus_id' => '106189723444098348646'
-			);
-	}
 
-	echo $before_widget;
-	echo $before_title;
-	echo $options['title'];
-	echo $after_title;
-	googleCards($options['plus_id']);
-	echo $after_widget;
-}
+class GoogleCardsWidget extends WP_Widget {
+    /** constructor */
+    function GoogleCardsWidget() {
+        parent::WP_Widget(false, $name = 'GoogleCard');
+		$css = '/wp-content/plugins/googlecards/css/googleCards.css';
+		wp_enqueue_style('googleCards', $css);
+		$js = '/wp-content/plugins/googlecards/js/googleCards.min.js';
+		wp_enqueue_script('googleCards', $js);
+    }
 
-// for widget options
-function googleCards_control()
-{
-	$options = get_option("widget_googleCards");
-	if (!is_array( $options ))
-	{
-		$options = array(
-			'title' => 'Follow me on google+',
-			'plus_id' => '106189723444098348646'
-			);
-	}
+    /** @see WP_Widget::widget */
+    function widget($args, $instance) {
+        extract( $args );
+        $title = apply_filters('widget_title', $instance['title']);
+        ?>
+              <?php echo $before_widget; ?>
+                  <?php if ( $title )
+                        echo $before_title . $title . $after_title; ?>
+                 <?php googleCards($instance['plus_id']); ?>
+              <?php echo $after_widget; ?>
+        <?php
+    }
 
-	if ($_POST['googleCards-Submit'])
-	{
-		$options['title'] = htmlspecialchars($_POST['googleCards-WidgetTitle']);
-		$options['plus_id'] = htmlspecialchars($_POST['googleCards-plusId']);
-		update_option("widget_googleCards", $options);
-	}
+    /** @see WP_Widget::update */
+    function update($new_instance, $old_instance) {
+		$instance = $old_instance;
+		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['plus_id'] = strip_tags($new_instance['plus_id']);
+        return $instance;
+    }
 
-	?>
-	<p>
-		<label for="googleCards-WidgetTitle">Title: </label>
-		<br />
-		<input type="text" id="googleCards-WidgetTitle" name="googleCards-WidgetTitle" value="<?php echo $options['title'];?>" />
-		<br /><br />
-		<label for="googleCards-plusId">Google+ id: </label>
-		<br />
-		<input type="text" id="googleCards-plusId" name="googleCards-plusId" value="<?php echo $options['plus_id'];?>" />
-		<br />
-		<input type="hidden" id="googleCards-Submit" name="googleCards-Submit" value="1" />
-	</p>
-	<?php
-}
+    /** @see WP_Widget::form */
+    function form($instance) {
+		$title = 'Follow me on Google+';
+		$plus_id = '106189723444098348646';
+		
+		if ($instance) {
+        	$title = esc_attr($instance['title']);
+        	$plus_id = esc_attr($instance['plus_id']);
+		}
+        ?>
+         <p>
+          <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+        </p>
+         <p>
+          <label for="<?php echo $this->get_field_id('plus_id'); ?>"><?php _e('Google Plus ID:'); ?></label> 
+          <input class="widefat" id="<?php echo $this->get_field_id('plus_id'); ?>" name="<?php echo $this->get_field_name('plus_id'); ?>" type="text" value="<?php echo $plus_id; ?>" />
+        </p>
+        <?php 
+    }
 
-// test whether we can write to the cache directory or not
-function gc_caching()
-{
-	if (!is_dir(WP_CONTENT_DIR . "/cache"))
-	{
-		mkdir (WP_CONTENT_DIR . "/cache", 0777, true);
-	}
-	if (is_dir(WP_CONTENT_DIR . "/cache") && is_writable(WP_CONTENT_DIR . "/cache"))
-	{
-		$cache = WP_CONTENT_DIR . "/cache/plus_cards.txt";
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
+} // class GoogleCardsWidget
 
-function googleCards_init()
-{
-	register_sidebar_widget(__('googleCards'), 'widget_googleCards');
-	register_widget_control('googleCards', 'googleCards_control', '', '' );
-	$css = '/wp-content/plugins/googlecards/css/googleCards.css';
-	wp_enqueue_style('googleCards', $css);
-	$js = '/wp-content/plugins/googlecards/js/googleCards.min.js';
-	wp_enqueue_script('googleCards', $js);
-}
+// register GoogleCardsWidget widget
+add_action('widgets_init', create_function('', 'return register_widget("GoogleCardsWidget");'));
 
-add_action("plugins_loaded", "googleCards_init");
 ?>
