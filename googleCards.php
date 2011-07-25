@@ -3,7 +3,7 @@
 Plugin Name: googleCards
 Plugin URI: http://plusdevs.com/google-wordpress-plugin/
 Description: Adds google+ contact card widget to your blog
-Version: 0.4.3
+Version: 0.4.4
 Author: Mabujo
 Author URI: http://plusdevs.com
 License: GPL3
@@ -30,9 +30,8 @@ License: GPL3
 
 define( 'GOOGLECARD_PLUGIN_NAME', 'googleCards');
 define( 'GOOGLECARD_PLUGIN_DIRECTORY', 'googlecards');
-define( 'GOOGLECARD_CURRENT_VERSION', '0.4.3' );
+define( 'GOOGLECARD_CURRENT_VERSION', '0.4.4' );
 define( 'GOOGLECARD_DEBUG', false);
-
 
 // test whether we can write to the cache directory or not
 function gc_caching()
@@ -52,7 +51,7 @@ function gc_caching()
 	}
 }
 
-function googleCards($plus_id, $credit=1)
+function googleCards($plus_id, $credit=1, $author, $blank)
 {
 	// include our scraper class
 	include_once('googleCardClass.php');
@@ -72,18 +71,37 @@ function googleCards($plus_id, $credit=1)
 
 	if (isset($data) && !empty($data['name']) && !empty($data['img']))
 	{
-		?>
+		// setup rel=author and target=blank options
+		$rel = '';
+		if(isset($author) && $author > 0)
+		{
+			$rel = 'rel="author"';
+		}
+		else
+		{
+			$rel = '';
+		}
+		$tab = '';
+		if(isset($blank) && $blank > 0)
+		{
+			$tab = 'target="_blank"';
+		}
+		else
+		{
+			$tab = '';
+		}
+?>
 		<div id="plus_card">
 			<div id="plus_card_image">
-				<a href="<?php echo $data['url']; ?>">
+				<a <?php echo $rel; ?> href="<?php echo $data['url']; ?>" <?php echo $tab; ?>>
 					<?php echo '<img src="' . $data['img'] . '" width="80" height="80" />'; ?>
 				</a>
 			</div>
 			<div id="plus_card_name">
-				<a href="<?php echo $data['url']; ?>"><?php echo $data['name'] ?></a>
+				<a <?php echo $rel; ?> href="<?php echo $data['url']; ?>" <?php echo $tab; ?>><?php echo $data['name'] ?></a>
 			</div>
 			<span id="plus_card_add">
-				<a href="<?php echo $data['url']; ?>">Add to circles</a>
+				<a <?php echo $rel; ?> href="<?php echo $data['url']; ?>" <?php echo $tab; ?>>Add to circles</a>
 			</span>
 			<div id="plusCardCount">
 				<p>In <?php if (isset($data['count'])) { echo $data['count']; } else { echo 0; } ?> people's circles</p>
@@ -93,7 +111,7 @@ function googleCards($plus_id, $credit=1)
 				{
 			?>
 			<div id="plusCardCredit">
-				<p>Google+ card by <a href="http://plusdevs.com">plusdevs</a></p>
+				<p>Google+ card by <a href="http://plusdevs.com" <?php echo $tab; ?>>plusdevs</a></p>
 			</div>
 			<span id="plusCardShowHide" onclick="togglePlusCredit()">+i</span>
 			<?php
@@ -130,7 +148,7 @@ class GoogleCardsWidget extends WP_Widget {
 			<?php echo $before_widget; ?>
 					<?php if ( $title )
 							echo $before_title . $title . $after_title; ?>
-				<?php googleCards($instance['plus_id'], $instance['credit']); ?>
+				<?php googleCards($instance['plus_id'], $instance['credit'], $instance['author'], $instance['blank']); ?>
 			<?php echo $after_widget; ?>
 		<?php
 	}
@@ -141,6 +159,8 @@ class GoogleCardsWidget extends WP_Widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['plus_id'] = strip_tags($new_instance['plus_id']);
 		$instance['credit'] = ( isset( $new_instance['credit'] ) ? 1 : 0 );
+		$instance['author'] = ( isset( $new_instance['author'] ) ? 1 : 0 );
+		$instance['blank'] = ( isset( $new_instance['blank'] ) ? 1 : 0 );
 		return $instance;
 	}
 
@@ -149,11 +169,15 @@ class GoogleCardsWidget extends WP_Widget {
 		$title = 'Follow me on Google+';
 		$plus_id = '';
 		$credit = true;
+		$author = false;
+		$blank = false;
 		
 		if ($instance) {
 			$title = esc_attr($instance['title']);
 			$plus_id = esc_attr($instance['plus_id']);
 			$credit = isset($instance['credit']) ? $instance['credit'] : true;
+			$author = isset($instance['author']) ? $instance['author'] : true;
+			$blank = isset($instance['blank']) ? $instance['blank'] : true;
 		}
 		else
 		{
@@ -176,6 +200,14 @@ class GoogleCardsWidget extends WP_Widget {
 			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['credit'], true ); ?> id="<?php echo $this->get_field_id( 'credit' ); ?>" name="<?php echo $this->get_field_name( 'credit' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'credit' ); ?>"><?php _e('Show developer credit '); ?><abbr style="border-bottom: 1px dotted black; color:<?php echo $color;?>; font-weight:bold;" title="Whether to show the 'Google+ card by plusdevs' message when a user clicks on '+i'. You don't have to leave this enabled but it is the best way for other people to find out about this plugin (which we've worked very hard on!) and we promise to love you forever if you do. The message is inobtrusive, your circles are always shown.">?</abbr></label>
 		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['author'], true ); ?> id="<?php echo $this->get_field_id( 'author' ); ?>" name="<?php echo $this->get_field_name( 'author' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'author' ); ?>"><?php _e('Add rel="author" to links?'); ?></label>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['blank'], true ); ?> id="<?php echo $this->get_field_id( 'blank' ); ?>" name="<?php echo $this->get_field_name( 'blank' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'blank' ); ?>"><?php _e('Open links in new window/tab?'); ?></label>
+		</p>
 		<?php 
 	}
 
@@ -183,5 +215,4 @@ class GoogleCardsWidget extends WP_Widget {
 
 // register GoogleCardsWidget widget
 add_action('widgets_init', create_function('', 'return register_widget("GoogleCardsWidget");'));
-
 ?>

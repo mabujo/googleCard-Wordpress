@@ -95,7 +95,7 @@ class googleCard
 
 			// parse the returned html for the data we want
 			$curlHtml = $this->parseHtml();
-		}	
+		}
 
 		// see if curl managed to get data
 		// if not, try with get_file_contents
@@ -114,7 +114,7 @@ class googleCard
 			// return
 			return $data;
 		}
-		
+
 	}
 
 	// parses through the returned html
@@ -123,7 +123,7 @@ class googleCard
 		// parse the html to look for the h4 'have X in circles' element
 		preg_match('/<h4 class="a-c-ka-Sf">(.*?)<\/h4>/s', $this->html, $matches);
 
-		if (isset($matches) && !empty($matches)) 
+		if (isset($matches) && !empty($matches))
 		{
 			$count = $matches[1];
 			$circles = preg_replace('/[^0-9_]/', '', $count);
@@ -131,7 +131,7 @@ class googleCard
 		if (empty($circles))
 		{
 			$circles = 0;
-		}		
+		}
 
 		// parse the html for the user's name
 		preg_match('/<span class="fn">(.*?)<\/span>/s', $this->html, $matches);
@@ -202,7 +202,7 @@ class googleCard
 
 			$cached = get_object_vars(json_decode($data));
 
-			if (is_null($cached['name']) || is_null($cached['url']) || $this->user_id != $cached['id']) 
+			if (is_null($cached['name']) || is_null($cached['url']) || $this->user_id != $cached['id'])
 			{
 				$html = $this->doCache($file);
 				return $html;
