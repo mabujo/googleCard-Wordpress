@@ -55,6 +55,9 @@ The plugin requires either CURL or file_get_contents() to be enabled on your ser
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4.5 =
+* This update fixes fetching of the circle count and the profile picture - it broke when Google changed the class names of the containing elements.
+
 = 0.4.4 =
 * Added option for adding rel=author to profile links, and an option to open profile links in a new tab.
 
@@ -83,6 +86,8 @@ The plugin requires either CURL or file_get_contents() to be enabled on your ser
 * Initial release
 
 == Upgrade Notice ==
+= 0.4.5 =
+* This plugin stopped being able to fetch the profile image and circle count when Google changed elements of Google+ profiles. This update fixes the problem.
 
 = 0.4 =
 googleCards no longer requires a cache file to work and should be much more reliable in fetching your data from google+. If you were having problems before please upgrade and try this new version.
