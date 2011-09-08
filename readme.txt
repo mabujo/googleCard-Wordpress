@@ -55,6 +55,9 @@ The plugin requires either CURL or file_get_contents() to be enabled on your ser
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4.6 =
+* Another fix for profile picture and circle count failing after google changed the plus profiles...
+
 = 0.4.5 =
 * This update fixes fetching of the circle count and the profile picture - it broke when Google changed the class names of the containing elements.
 
