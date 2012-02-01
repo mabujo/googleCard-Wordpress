@@ -55,6 +55,9 @@ The plugin requires either CURL or file_get_contents() to be enabled on your ser
 1. googleCards widget in the sidebar
 
 == Changelog ==
+= 0.4.7 =
+* Fixing the class names once again after a google+ change.
+
 = 0.4.6 =
 * Another fix for profile picture and circle count failing after google changed the plus profiles...
 
